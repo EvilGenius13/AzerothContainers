@@ -1,0 +1,28 @@
+name: Dev Build
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        docker build --no-cache -t evilgenius13/azerothcontainers:dev .
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+    - name: Push Docker image
+      run: |
+        docker push evilgenius13/azerothcontainers:dev
+    - name: Notify Discord
+      uses: th0th/notify-discord@v0.4.1
+      if: ${{ always() }}
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        GITHUB_JOB_STATUS: ${{ job.status }}
