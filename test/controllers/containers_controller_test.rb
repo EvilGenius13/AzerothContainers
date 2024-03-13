@@ -1,10 +1,19 @@
 require "test_helper"
+require 'mocha/minitest'
 
 class ContainersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @container = containers(:one)
   end
 
+  test "index action should handle Docker errors" do
+    Docker::Container.stubs(:all).raises(Docker::Error::DockerError.new("Mocked error"))
+  
+    get containers_url
+    assert_response :success
+    assert_match "Failed to connect to Docker daemon Mocked error", @response.body
+  end
+  
   test "should get index" do
     get containers_url
     assert_response :success
