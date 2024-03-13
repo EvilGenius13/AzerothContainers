@@ -1,10 +1,10 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @container %>
+<h1>Container Info</h1>
 
-<div>
-  <%= link_to "Edit this container", edit_container_path(@container) %> |
-  <%= link_to "Back to containers", containers_path %>
 
-  <%= button_to "Destroy this container", @container, method: :delete %>
-</div>
+<% if @error %>
+  <p>Error: <%= @error %></p>
+<% else %>
+  <%= @container.json%>
+<% end %>

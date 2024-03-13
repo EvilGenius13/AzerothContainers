@@ -1,9 +1,15 @@
+require 'docker'
+
 class ContainersController < ApplicationController
+  # Docker.url = 'unix://var/run/docker.sock'
   before_action :set_container, only: %i[ show edit update destroy ]
 
   # GET /containers or /containers.json
   def index
-    @containers = Container.all
+    # Docker.url = 'unix://var/run/docker.sock'
+    @containers = Docker::Container.all(all: true)
+  rescue Docker::Error::DockerError => e
+    @error = "Failed to connect to Docker daemon #{e.message}"
   end
 
   # GET /containers/1 or /containers/1.json
@@ -60,7 +66,7 @@ class ContainersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_container
-      @container = Container.find(params[:id])
+      @container = Docker::Container.get(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
