@@ -2,13 +2,30 @@
 
 <h1>Containers</h1>
 
-<div id="containers">
-  <% @containers.each do |container| %>
-    <%= render container %>
-    <p>
-      <%= link_to "Show this container", container %>
-    </p>
-  <% end %>
-</div>
+<% if @error %>
+  <p>Error: <%= @error %></p>
+<% else %>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
 
-<%= link_to "New container", new_container_path %>
+    <tbody>
+      <% @containers.each do |container| %>
+        <tr>
+          <td><%= container.json['Id']%></td>
+          <td><%= container.json['Name'].sub(/^\//, '') %></td>
+          <td><%= container.info['State'] %></td>
+          <td>
+            <!-- Add actions like start/stop here -->
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
