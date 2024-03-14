@@ -16,6 +16,15 @@ class ContainersController < ApplicationController
   def show
   end
 
+  # Start container
+  def start
+    container = Docker::Container.get(params[:id])
+    container.start
+    redirect_to containers_url, notice: "Container was succesfully started."
+  rescue Docker::Error::DockerError => e
+    redirect_to containers_url, alert: "Failed to start container: #{e.message}"
+  end
+
   # GET /containers/new
   def new
     @container = Container.new

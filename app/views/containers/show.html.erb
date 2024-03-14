@@ -1,10 +1,20 @@
-<p style="color: green"><%= notice %></p>
+<div class="p-5">
+  <p class="text-green-500"><%= notice %></p>
 
-<h1 class="text-3xl font-bold underline">Container Info</h1>
+  <h1 class="text-3xl font-bold underline mb-4">Container Info</h1>
 
-
-<% if @error %>
-  <p>Error: <%= @error %></p>
-<% else %>
-  <%= @container.json%>
-<% end %>
+  <% if @error %>
+    <p class="text-red-500">Error: <%= @error %></p>
+  <% else %>
+    <div class="space-y-2">
+      <p><strong>ID:</strong> <%= @container.json['Id'] %></p>
+      <p><strong>Status:</strong> <%= @container.json['State']['Status'] %></p>
+      <p><strong>OOM Killed:</strong> <%= @container.json['State']['OOMKilled'] ? 'Yes' : 'No' %></p>
+      <p><strong>Exit Code:</strong> <%= @container.json['State']['ExitCode'] %></p>
+      <p><strong>Error:</strong> <%= @container.json['State']['Error'].present? ? @container.json['State']['Error'] : 'None' %></p>
+      <p><strong>Image:</strong> <%= @container.json['Image'] %></p>
+      <p><strong>Name:</strong> <%= @container.json['Name'].sub(/^\//, '') %></p>
+      <p><strong>Platform:</strong> <%= @container.json['Platform'] %></p>
+    </div>
+  <% end %>
+</div>

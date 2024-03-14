@@ -1,28 +1,45 @@
 # AzerothContainers
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A portainer like application for managing docker containers with a simple UI.
 
-Things you may want to cover:
+## Roadmap
+### Containers
+- [X] Can see all containers
+- [X] Can see specific container
+- [] Can start container TODO: Started coding start container. Need to add to index form.
+- [] Can stop container
+- [] Can restart container
+- [] Can remove container
+- [] Can see logs of container
+- [] Can see stats of container
+- [] Can see exec into container
+- [] Can see inspect of container
+- [] Can create a container (with options)
 
-* Ruby version
+### Images
+- [] Can see all images
+- [] Can see specific image
+- [] Can pull image
+- [] Can remove image
 
-* System dependencies
+### Networks
+- [] Can see all networks
 
-* Configuration
+### Volumes
+- [] Can see all volumes
 
-* Database creation
+### Compose
+Mid term goal
 
-* Database initialization
+### Swarm
+Long term goal
 
-* How to run the test suite
+### Stacks
+Long term goal
 
-* Services (job queues, cache servers, search engines, etc.)
+### Kubernetes
+Long term goal
 
-* Deployment instructions
-
-* ...
-
-# Starting
+## Starting
 `rails s` to start server
 `./bin/dev` to start server in build mode for tailwind
