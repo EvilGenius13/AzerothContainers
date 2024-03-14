@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  azerothcontainers:
+    image: ac-mac
+    container_name: ac
+    ports: 
+      - "3000:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - INSIDE_DOCKER=true
+      - RAILS_ENV=development
