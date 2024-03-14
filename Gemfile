@@ -67,3 +67,7 @@ group :test do
 end
 
 gem 'docker-api'
+
+group :test do
+  gem 'mocha', require: 'mocha/minitest'
+end
