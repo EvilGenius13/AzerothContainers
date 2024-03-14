@@ -1,8 +1,15 @@
 # AzerothContainers
 
 A portainer like application for managing docker containers with a simple UI.
+> [!WARNING]  
+> The current Dockerfile uses root permissions to connect to the docker daemon. This is not secure and will be changed in a future period.
 
 ## Roadmap
+
+### Security
+- [X] Remove root access for group access method
+- [X] Add authentication
+
 ### Containers
 - [X] Can see all containers
 - [X] Can see specific container
