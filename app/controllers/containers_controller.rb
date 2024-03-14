@@ -1,7 +1,7 @@
 require 'docker'
 
 class ContainersController < ApplicationController
-  # Docker.url = 'unix://var/run/docker.sock'
+  before_action :set_docker_url
   before_action :set_container, only: %i[ show edit update destroy ]
 
   # GET /containers or /containers.json
@@ -64,6 +64,12 @@ class ContainersController < ApplicationController
   end
 
   private
+    def set_docker_url
+      if ENV['INSIDE_DOCKER'].present?
+        Docker.url = 'unix://var/run/docker.sock'
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_container
       # Docker.url = 'unix://var/run/docker.sock'
