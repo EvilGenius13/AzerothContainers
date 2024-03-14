@@ -71,3 +71,4 @@ gem 'docker-api'
 group :test do
   gem 'mocha', require: 'mocha/minitest'
 end
+gem "tailwindcss-rails", "~> 2.3"

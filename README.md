@@ -22,3 +22,7 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+# Starting
+`rails s` to start server
+`./bin/dev` to start server in build mode for tailwind
