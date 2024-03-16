@@ -1,0 +1,13 @@
+<div class="max-w-xl mx-auto bg-white rounded-lg shadow-md p-6 mt-4">
+  <h2 class="text-xl font-semibold text-gray-800 mb-4">Container Stats</h2>
+  <div class="space-y-3">
+    <p><strong>Container ID:</strong> <span class="text-gray-600"><%= @container_stats.dig("id") %></span></p>
+    <p><strong>Name:</strong> <span class="text-gray-600"><%= @container_stats.dig("name") %></span></p>
+    <p><strong>CPU Usage:</strong> <span class="text-gray-600"><%= '%.2f' % ((@container_stats.dig("cpu_stats", "cpu_usage", "total_usage").to_f - @container_stats.dig("precpu_stats", "cpu_usage", "total_usage").to_f) / (@container_stats.dig("cpu_stats", "system_cpu_usage") - @container_stats.dig("precpu_stats", "system_cpu_usage")) * 100 * @container_stats.dig("cpu_stats", "online_cpus")) rescue 'N/A' %> %</span></p>
+    <p><strong>Memory Usage / Limit:</strong> <span class="text-gray-600"><%= humanize_bytes(@container_stats.dig("memory_stats", "usage")) %> / <%= humanize_bytes(@container_stats.dig("memory_stats", "limit")) %></span></p>
+    <p><strong>Memory %:</strong> <span class="text-gray-600"><%= '%.2f' % (@container_stats.dig("memory_stats", "usage").to_f / @container_stats.dig("memory_stats", "limit") * 100) rescue 'N/A' %> %</span></p>
+    <p><strong>NET I/O:</strong> <span class="text-gray-600"><%= humanize_bytes(@container_stats.dig("networks", "eth0", "rx_bytes")) %> / <%= humanize_bytes(@container_stats.dig("networks", "eth0", "tx_bytes")) %></span></p>
+    <p><strong>BLOCK I/O:</strong> <span class="text-gray-600">TBD</span></p>
+    <p><strong>PIDS:</strong> <span class="text-gray-600"><%= @container_stats.dig("pids_stats", "current") %></span></p>
+  </div>
+</div>
