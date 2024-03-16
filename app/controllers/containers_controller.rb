@@ -2,11 +2,10 @@ require 'docker'
 
 class ContainersController < ApplicationController
   before_action :set_docker_url
-  before_action :set_container, only: %i[ show edit update destroy ]
+  before_action :set_container, only: %i[ show edit update destroy logs start stop stats ]
 
   # GET /containers or /containers.json
   def index
-    # Docker.url = 'unix://var/run/docker.sock'
     @containers = Docker::Container.all(all: true)
   rescue Docker::Error::DockerError => e
     @error = "Failed to connect to Docker daemon #{e.message}"
@@ -18,8 +17,7 @@ class ContainersController < ApplicationController
 
   # Start container
   def start
-    container = Docker::Container.get(params[:id])
-    container.start
+    @container.start
     redirect_to containers_url, notice: "Container was succesfully started."
   rescue Docker::Error::DockerError => e
     redirect_to containers_url, alert: "Failed to start container: #{e.message}"
@@ -27,11 +25,29 @@ class ContainersController < ApplicationController
 
   # Stop container
   def stop
-    container = Docker::Container.get(params[:id])
-    container.stop
+    @container.stop
     redirect_to containers_url, notice: "Container was successfully stopped."
   rescue Docker::Error::DockerError => e
     redirect_to containers_url, alert: "Failed to stop container: #{e.message}"
+  end
+
+  # Container logs
+  def logs
+    log_entries = []
+    include_stderr = params[:log_level] == 'advanced'
+    
+    @container.streaming_logs(stdout: true, stderr: include_stderr) do |stream, chunk|
+      prefix = stream == :stdout ? "stdout" : "stderr"
+      log_entries << "#{prefix}: #{chunk}" if include_stderr || stream == :stdout
+    end
+
+    @logs = log_entries
+  end
+
+  # Container stats (Non-Streaming)
+  def stats
+    stats_data = @container.stats(api: {stream: false})
+    @container_stats = stats_data
   end
 
   # GET /containers/new
@@ -90,8 +106,9 @@ class ContainersController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_container
-      # Docker.url = 'unix://var/run/docker.sock'
       @container = Docker::Container.get(params[:id])
+    rescue Docker::Error::DockerError => e
+      @error = "Failed to get container #{e.message}"
     end
 
     # Only allow a list of trusted parameters through.

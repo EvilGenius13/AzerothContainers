@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     member do
       post 'start'
       post 'stop'
+      get 'logs'
+      get 'stats'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
