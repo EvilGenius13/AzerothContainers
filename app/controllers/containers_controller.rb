@@ -1,6 +1,7 @@
 require 'docker'
 
 class ContainersController < ApplicationController
+  include ContainersHelper
   before_action :set_docker_url
   before_action :set_container, only: %i[ show edit update destroy logs start stop stats ]
 
@@ -52,7 +53,7 @@ class ContainersController < ApplicationController
 
   # GET /containers/new
   def new
-    @container = Container.new
+    @container = ContainerForm.new
   end
 
   # GET /containers/1/edit
@@ -61,18 +62,26 @@ class ContainersController < ApplicationController
 
   # POST /containers or /containers.json
   def create
-    @container = Container.new(container_params)
-
-    respond_to do |format|
-      if @container.save
-        format.html { redirect_to container_url(@container), notice: "Container was successfully created." }
-        format.json { render :show, status: :created, location: @container }
+    @container_form = ContainerForm.new(container_params)
+  
+    if @container_form.valid?
+      docker_params = create_container_params(params)
+  
+      pull_image(docker_params['Image']) unless image_exists_locally?(docker_params['Image'])
+      @docker_container = Docker::Container.create(docker_params)
+  
+      if @docker_container.json['id'].present?
+        redirect_to containers_url, notice: "Container was successfully created."
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @container.errors, status: :unprocessable_entity }
+        # If Docker container creation fails, `@container_form` is already set
+        render :new, status: :unprocessable_entity
       end
+    else
+      # If validations fail, render the form again
+      render :new, status: :unprocessable_entity
     end
   end
+  
 
   # PATCH/PUT /containers/1 or /containers/1.json
   def update
@@ -113,6 +122,6 @@ class ContainersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def container_params
-      params.require(:container).permit(:name, :status)
+      params.permit(:name, :image, :exposed_ports, :port_bindings)
     end
 end

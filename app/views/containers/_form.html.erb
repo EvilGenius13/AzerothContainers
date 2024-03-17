@@ -1,4 +1,4 @@
-<%= form_with(model: container) do |form| %>
+<%= form_with(model: @container_form, url: containers_path, local: true) do |form| %>
   <% if container.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(container.errors.count, "error") %> prohibited this container from being saved:</h2>
@@ -12,16 +12,27 @@
   <% end %>
 
   <div>
+    <%= form.label :image, style: "display: block" %>
+    <%= form.text_field :image %>
+  </div>
+
+  <div>
     <%= form.label :name, style: "display: block" %>
     <%= form.text_field :name %>
   </div>
 
   <div>
-    <%= form.label :status, style: "display: block" %>
-    <%= form.text_field :status %>
+    <%= form.label :Exposed_Ports, style: "display: block" %>
+    <%= form.text_field :exposed_ports %>
   </div>
 
   <div>
-    <%= form.submit %>
+    <%= form.label :Port_Bindings, style: "display: block" %>
+    <%= form.text_field :port_bindings %>
+  </div>
+
+
+  <div>
+    <%= form.submit "Create Container" %>
   </div>
 <% end %>
