@@ -1,6 +1,7 @@
 require 'docker'
 
 class ContainersController < ApplicationController
+  include ContainersHelper
   before_action :set_docker_url
   before_action :set_container, only: %i[ show edit update destroy logs start stop stats ]
 
@@ -52,7 +53,8 @@ class ContainersController < ApplicationController
 
   # GET /containers/new
   def new
-    @container = Container.new
+    @container_form = ContainerForm.new
+    Rails.logger.debug "@container_form: #{@container_form.inspect}"
   end
 
   # GET /containers/1/edit
@@ -61,18 +63,36 @@ class ContainersController < ApplicationController
 
   # POST /containers or /containers.json
   def create
-    @container = Container.new(container_params)
-
-    respond_to do |format|
-      if @container.save
-        format.html { redirect_to container_url(@container), notice: "Container was successfully created." }
-        format.json { render :show, status: :created, location: @container }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @container.errors, status: :unprocessable_entity }
+    @container_form = ContainerForm.new(container_params)
+  
+    if @container_form.valid?
+      docker_params = create_container_params(params)
+  
+      always_pull = ActiveModel::Type::Boolean.new.cast(@container_form.always_pull)
+      if always_pull || !image_exists_locally?(docker_params['Image'])
+        unless pull_image(docker_params['Image'])
+          flash.now[:alert] = "Failed to pull the specified image. Please check the image name and try again."
+          render :new, status: :unprocessable_entity and return
+        end
       end
+
+      @docker_container = Docker::Container.create(docker_params)
+
+      if @docker_container.id.present?
+        StartDockerContainerJob.perform_later(@docker_container.id)
+        redirect_to containers_url, notice: "Container was successfully created."
+      else
+        # Handle the case where the Docker container does not provide an ID
+        flash[:alert] = "Container creation failed for an unknown reason."
+        render :new, status: :unprocessable_entity
+      end
+    else
+      # This block is reached if the form validation fails
+      render :new, status: :unprocessable_entity
     end
   end
+  
+  
 
   # PATCH/PUT /containers/1 or /containers/1.json
   def update
@@ -113,6 +133,6 @@ class ContainersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def container_params
-      params.require(:container).permit(:name, :status)
+      params.require(:container_form).permit(:name, :image, :exposed_ports, :port_bindings, :always_pull)
     end
 end

@@ -7,21 +7,34 @@ A portainer like application for managing docker containers with a simple UI.
 ## Roadmap
 
 ### Security
-- [X] Remove root access for group access method
-- [X] Add authentication
+- [] Remove root access for group access method
+- [] Add authentication
 
 ### Containers
 - [X] Can see all containers
 - [X] Can see specific container
-- [] Can start container TODO: Started coding start container. Need to add to index form.
-- [] Can stop container
+- [X] Can start container
+- [X] Can stop container
 - [] Can restart container
+- [] Can pause container
+- [] Can unpause container
 - [] Can remove container
-- [] Can see logs of container
-- [] Can see stats of container
+- [X] Can see logs of container
+- [X] Can see stats of container (CPU, Memory, Network, Disk, IO) - Currently only a snapshot. See (Container Stats Monitoring)
 - [] Can see exec into container
 - [] Can see inspect of container
-- [] Can create a container (with options)
+- [X] Can create a container TODO: Need to test latest container with a fresh pull from dockerhub with noticeable change.
+- [] Add UDP and TCP port mapping options.
+- [] TODO: When running docker run -p 3000 it automatically creates an external port in the 5xxxx range. Should mimic the same behaviour.
+
+
+### Container Stats Monitoring
+- [] Set up the following as a stream
+  - [] Can see CPU usage
+  - [] Can see Memory usage
+  - [] Can see Network usage
+  - [] Can see Disk usage
+  - [] Can see IO usage
 
 ### Images
 - [] Can see all images
@@ -48,5 +61,15 @@ Long term goal
 Long term goal
 
 ## Starting
+
+### Locally
+`bundle install` to install dependencies
 `rails s` to start server
 `./bin/dev` to start server in build mode for tailwind
+
+### Locally via Docker
+`docker build -t azeroth_containers .` to build the docker image
+`docker run -p 3000:3000 azeroth_containers` to run the docker image
+
+### Latest build from Dockerhub (Dev)
+`docker run -p 3000:3000 evilgenius13/azerothcontainers:dev`

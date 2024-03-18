@@ -10,12 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_12_202905) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_17_182009) do
   create_table "containers", force: :cascade do |t|
     t.string "name"
-    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image", null: false
+    t.string "command"
+    t.text "environment_variables"
+    t.text "exposed_ports"
+    t.text "volumes"
+    t.string "cpu_limit"
+    t.string "memory_limit"
+    t.string "restart_policy"
+    t.string "network_mode"
+    t.text "labels"
+    t.text "port_bindings"
   end
 
 end
