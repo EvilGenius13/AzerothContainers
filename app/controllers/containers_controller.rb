@@ -53,7 +53,8 @@ class ContainersController < ApplicationController
 
   # GET /containers/new
   def new
-    @container = ContainerForm.new
+    @container_form = ContainerForm.new
+    Rails.logger.debug "@container_form: #{@container_form.inspect}"
   end
 
   # GET /containers/1/edit
@@ -67,20 +68,30 @@ class ContainersController < ApplicationController
     if @container_form.valid?
       docker_params = create_container_params(params)
   
-      pull_image(docker_params['Image']) unless image_exists_locally?(docker_params['Image'])
+      always_pull = ActiveModel::Type::Boolean.new.cast(@container_form.always_pull)
+      if always_pull || !image_exists_locally?(docker_params['Image'])
+        unless pull_image(docker_params['Image'])
+          flash.now[:alert] = "Failed to pull the specified image. Please check the image name and try again."
+          render :new, status: :unprocessable_entity and return
+        end
+      end
+
       @docker_container = Docker::Container.create(docker_params)
-  
-      if @docker_container.json['id'].present?
+
+      if @docker_container.id.present?
+        StartDockerContainerJob.perform_later(@docker_container.id)
         redirect_to containers_url, notice: "Container was successfully created."
       else
-        # If Docker container creation fails, `@container_form` is already set
+        # Handle the case where the Docker container does not provide an ID
+        flash[:alert] = "Container creation failed for an unknown reason."
         render :new, status: :unprocessable_entity
       end
     else
-      # If validations fail, render the form again
+      # This block is reached if the form validation fails
       render :new, status: :unprocessable_entity
     end
   end
+  
   
 
   # PATCH/PUT /containers/1 or /containers/1.json
@@ -122,6 +133,6 @@ class ContainersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def container_params
-      params.permit(:name, :image, :exposed_ports, :port_bindings)
+      params.require(:container_form).permit(:name, :image, :exposed_ports, :port_bindings, :always_pull)
     end
 end
