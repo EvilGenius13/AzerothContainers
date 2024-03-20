@@ -10,6 +10,11 @@ A portainer like application for managing docker containers with a simple UI.
 - [] Remove root access for group access method
 - [] Add authentication
 
+### Logging
+- [] Add logging to the application
+- [] Add logging to the docker daemon
+- [] Add tracing to the application
+
 ### Containers
 - [X] Can see all containers
 - [X] Can see specific container
@@ -25,7 +30,8 @@ A portainer like application for managing docker containers with a simple UI.
 - [] Can see inspect of container
 - [X] Can create a container TODO: Need to test latest container with a fresh pull from dockerhub with noticeable change.
 - [] Add UDP and TCP port mapping options.
-- [] TODO: When running docker run -p 3000 it automatically creates an external port in the 5xxxx range. Should mimic the same behaviour.
+- [] TODO: When running docker run -p xxxx it automatically creates an external port in the 5xxxx range. We should mimic the same behaviour.
+  - Use turbo and job to clean up snapshot data
 
 
 ### Container Stats Monitoring
@@ -41,6 +47,9 @@ A portainer like application for managing docker containers with a simple UI.
 - [] Can see specific image
 - [] Can pull image
 - [] Can remove image
+
+### Multiple Evironments
+- [] Can see all environments
 
 ### Networks
 - [] Can see all networks

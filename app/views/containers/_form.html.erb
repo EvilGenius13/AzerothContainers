@@ -1,3 +1,4 @@
+<div class="ml-64 p-10">
 <%= form_with(model: container_form, url: containers_path, local: true) do |form| %>
   <% flash.each do |type, message| %>
   <div class="<%= type %>"><%= message %></div>
@@ -46,3 +47,4 @@
     <%= form.submit "Deploy Container" %>
   </div>
 <% end %>
+</div>
