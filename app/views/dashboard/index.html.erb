@@ -2,21 +2,27 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     <div class="bg-blue-500 text-white p-4 rounded-lg shadow-md">
       <h2 class="text-xl font-bold">Containers</h2>
-      <p><span class="text-3xl">10</span> Active</p>
-      <p><span class="text-3xl">5</span> Inactive</p>
+      <p><span class="text-3xl"><%= @info['Containers'] %></span> Total</p>
+      <p><span class="text-3xl"><%= @info['ContainersRunning'] %></span> Active</p>
     </div>
     <div class="bg-green-500 text-white p-4 rounded-lg shadow-md">
       <h2 class="text-xl font-bold">Images</h2>
-      <p><span class="text-3xl">25</span> Total</p>
+      <p><span class="text-3xl"><%= @info['Images'] %></span> Total</p>
     </div>
     <div class="bg-red-500 text-white p-4 rounded-lg shadow-md">
       <h2 class="text-xl font-bold">Networks</h2>
-      <p><span class="text-3xl">8</span> Total</p>
+      <p><span class="text-3xl">N/A</span> Total</p>
     </div>
     <div class="bg-yellow-500 text-white p-4 rounded-lg shadow-md">
       <h2 class="text-xl font-bold">Volumes</h2>
-      <p><span class="text-3xl">15</span> Total</p>
+      <p><span class="text-3xl">N/A</span> Total</p>
     </div>
+    </div>
+    <div class="bg-purple-500 text-black p-4 rounded-lg shadow-md">
+      <h2 class="text-xl font-bold">System Info</h2>
+      <p><i class="fa-solid fa-microchip"></i> CPU: <span class="text-3xl"><%= @info['NCPU'] %></span></p>
+      <p><i class="fa-solid fa-memory"></i> Memory: <span class="text-3xl"><%= (@info['MemTotal'].to_f / 2**30).round(2) %> GiB</span></p>
+      <p><i class="fa-solid fa-laptop"></i> OS: <span class="text-xl"><%= @info['OperatingSystem'] %></span></p>
   </div>
 </div>
 
