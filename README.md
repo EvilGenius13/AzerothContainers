@@ -1,5 +1,5 @@
 # AzerothContainers
-
+[/app/assets/images/logo-main.png]
 A portainer like application for managing docker containers with a simple UI.
 > [!WARNING]  
 > The current Dockerfile uses root permissions to connect to the docker daemon. This is not secure and will be changed in a future period.
@@ -24,11 +24,11 @@ A portainer like application for managing docker containers with a simple UI.
 - [] Can pause container
 - [] Can unpause container
 - [] Can remove container
-- [X] Can see logs of container
+- [X] Can see logs of container TODO: need to colour errors in red.
 - [X] Can see stats of container (CPU, Memory, Network, Disk, IO) - Currently only a snapshot. See (Container Stats Monitoring)
 - [] Can see exec into container
 - [] Can see inspect of container
-- [X] Can create a container TODO: Need to test latest container with a fresh pull from dockerhub with noticeable change.
+- [X] Can create a container TODO: Need to test latest container with a fresh pull from dockerhub with noticeable change. Need descriptors on fields.
 - [] Add UDP and TCP port mapping options.
 - [] TODO: When running docker run -p xxxx it automatically creates an external port in the 5xxxx range. We should mimic the same behaviour.
   - Use turbo and job to clean up snapshot data
