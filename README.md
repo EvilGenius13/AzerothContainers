@@ -1,6 +1,8 @@
 # AzerothContainers
-![Main Logo](/app/assets/images/logo-main-mid.png)
 A portainer like application for managing docker containers with a simple UI.
+
+![Main Logo](/app/assets/images/logo-main-mid.png)
+
 > [!WARNING]  
 > The current Dockerfile uses root permissions to connect to the docker daemon. This is not secure and will be changed in a future period.
 
